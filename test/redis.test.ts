@@ -91,7 +91,7 @@ describe('Redis Store', () => {
     await redisClient.set(key2, value, ttl);
     await redisClient.set(key3, value, ttl);
 
-    const res = await redisClient.scan('ttl:a:*', 0, 10);
+    const res = await redisClient.scan('ttl:a:*');
     expect(res.keys).toEqual([key1, key3]);
 
     const firstScanWithCount = await redisClient.scan('ttl:a:*', 0, 1);

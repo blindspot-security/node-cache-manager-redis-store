@@ -106,7 +106,7 @@ class buildRedisStoreWithConfig implements RedisStore {
     return await this.redisCache.ttl(key);
   };
 
-  public async scan(pattern: string, cursor: number = 0, count?: number): Promise<ScanReply> {
+  public async scan(pattern: string, cursor: number = 0, count: number = 10): Promise<ScanReply> {
     return await this.redisCache.scan(cursor, { MATCH: pattern, COUNT: count });
   }
 
