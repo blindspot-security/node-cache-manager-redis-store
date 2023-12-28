@@ -9,7 +9,7 @@ export interface RedisStore extends Store {
 
   scan(pattern: string, cursor? :number, count?: number): Promise<ScanReply>;
 
-  atomicGetAndSet(key: string, updateFunction: (val: any) =>  any): Promise<void>;
+  atomicGetAndSet(key: string, updateFunction: (val: any) =>  any): Promise<any>;
 
   flushAll(): Promise<void>
 
