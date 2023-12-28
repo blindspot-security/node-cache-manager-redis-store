@@ -116,7 +116,7 @@ describe('Redis Store', () => {
   it('should inc value by one', async () => {
     await redisClient.set('test', { a: 1 });
     const res = await redisClient.atomicGetAndSet('test', (obj) => {
-      const parsedVal = JSON.parse(obj);
+      const parsedVal = obj;
       parsedVal.a = parsedVal.a + 1;
       return JSON.stringify(parsedVal);
     });
