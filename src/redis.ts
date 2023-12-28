@@ -109,12 +109,16 @@ class buildRedisStoreWithConfig implements RedisStore {
   };
 
   public async scan(pattern: string, cursor: number = 0, count: number = 10): Promise<ScanReply> {
-    return await this.redisCache.scan(cursor, { MATCH: pattern, COUNT: count });
+    return await this.redisCache.scan(cursor, {MATCH: pattern, COUNT: count});
   }
 
   public async atomicGetAndSet(key: string, updateFunction: (val: any) => any): Promise<RedisCommandRawReply> {
     await this.redisCache.watch(key);
     return await this.redisCache.multi().set(key, updateFunction(await this.get(key))).get(key).exec();
+  }
+
+  public async incrBy(key: string, incrementBy: number): Promise<number> {
+    return await this.redisCache.incrBy(key, incrementBy);
   }
 
   public async flushAll() {

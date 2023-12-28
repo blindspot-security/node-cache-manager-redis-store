@@ -86,6 +86,18 @@ describe('Redis Store', () => {
     expect(retrievedTtl).toBeLessThanOrEqual(ttl / 1000); // Redis returns TTL in seconds
   });
 
+  it('should increment a value', async () => {
+    const key = 'testKey';
+    const value = 1;
+
+    await redisClient.set(key, value);
+    const numberIncrBy = await redisClient.incrBy(key, 1);
+
+    const retrievedValue = await redisClient.get(key);
+    expect(numberIncrBy).toEqual(2);
+    expect(retrievedValue).toEqual(2);
+  });
+
   it('should return scan result by pattern', async () => {
     const key1 = 'ttl:a:b';
     const key2 = 'ttl1:a:b';
@@ -120,7 +132,7 @@ describe('Redis Store', () => {
       parsedVal.a = parsedVal.a + 1;
       return JSON.stringify(parsedVal);
     });
-    expect(JSON.parse(res[1])).to.deep.equal({ a: 2 });
+    expect(JSON.parse(res[1] as string)).to.deep.equal({ a: 2 });
     expect(res[0]).to.deep.equal("OK");
   })
 
