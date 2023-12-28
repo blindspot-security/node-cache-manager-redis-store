@@ -3,7 +3,7 @@ import {
   RedisClientType,
   RedisDefaultModules,
   RedisFunctions,
-  RedisModules, RedisScripts, WatchError
+  RedisModules, RedisScripts
 } from 'redis';
 import {Milliseconds, RedisStore, TConfig, TMset} from './types';
 import {ScanReply} from '@redis/client/dist/lib/commands/SCAN';
