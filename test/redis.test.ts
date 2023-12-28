@@ -1,6 +1,6 @@
-import {redisStore} from '../src';
-import {RedisStore} from "../src/types";
-import {describe, beforeEach, it, expect} from "vitest";
+import { redisStore } from '../src';
+import { RedisStore } from "../src/types";
+import { describe, beforeEach, it, expect, afterEach } from "vitest";
 
 let redisClient: RedisStore
 const config = {
@@ -12,10 +12,16 @@ const config = {
   db: 0,
   ttl: 1000 * 60,
 };
+
 beforeEach(async () => {
   redisClient = await redisStore(config);
   await redisClient.reset();
 });
+
+afterEach(async () => {
+  await redisClient.flushAll()
+});
+
 describe('Redis Store', () => {
 
   it('should set and get a value', async () => {
@@ -80,7 +86,7 @@ describe('Redis Store', () => {
     expect(retrievedTtl).toBeLessThanOrEqual(ttl / 1000); // Redis returns TTL in seconds
   });
 
-  it(`should return scan result by pattern`, async () => {
+  it('should return scan result by pattern', async () => {
     const key1 = 'ttl:a:b';
     const key2 = 'ttl1:a:b';
     const key3 = 'ttl:a:b1';
@@ -106,4 +112,16 @@ describe('Redis Store', () => {
     expect(thirdScanWithCount.keys).toEqual([]);
     expect(thirdScanWithCount.cursor).equal(0);
   });
+
+  it('should inc value by one', async () => {
+    await redisClient.set('test', { a: 1 });
+    const res = await redisClient.atomicGetAndSet('test', (obj) => {
+      const parsedVal = obj;
+      parsedVal.a = parsedVal.a + 1;
+      return JSON.stringify(parsedVal);
+    });
+    expect(JSON.parse(res[1])).to.deep.equal({ a: 2 });
+    expect(res[0]).to.deep.equal("OK");
+  })
+
 });
