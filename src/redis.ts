@@ -114,8 +114,7 @@ class buildRedisStoreWithConfig implements RedisStore {
 
   public async atomicGetAndSet(key: string, updateFunction: (val: any) => any): Promise<RedisCommandRawReply> {
     await this.redisCache.watch(key);
-    const val = await this.get(key);
-    return await this.redisCache.multi().set(key, updateFunction(val)).get(key).exec();
+    return await this.redisCache.multi().set(key, updateFunction(await this.get(key))).get(key).exec();
   }
 
   public async flushAll() {
