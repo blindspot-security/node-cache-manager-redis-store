@@ -120,8 +120,7 @@ describe('Redis Store', () => {
       parsedVal.a = parsedVal.a + 1;
       return JSON.stringify(parsedVal);
     });
-    const newVal = await redisClient.get('test')
-    expect(newVal).to.deep.equal({ a: 2 });
+    expect(JSON.parse(res[1])).to.deep.equal({ a: 2 });
     expect(res[0]).to.deep.equal("OK");
   })
 
