@@ -117,7 +117,9 @@ class buildRedisStoreWithConfig implements RedisStore {
     return await this.redisCache.multi().set(key, updateFunction(await this.get(key))).get(key).exec();
   }
 
-  public async incrBy(key: string, incrementBy: number): Promise<number> {
+  public async incrBy(key: string, incrementBy: number, ttl?: Milliseconds): Promise<number> {
+    const ttlValue = this.getTtl(ttl);
+    await this.redisCache.set(key, 0, {PX: ttlValue, NX: true});
     return await this.redisCache.incrBy(key, incrementBy);
   }
 

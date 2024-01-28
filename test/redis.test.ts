@@ -88,12 +88,12 @@ describe('Redis Store', () => {
 
   it('should increment a value', async () => {
     const key = 'testKey';
-    const value = 1;
 
-    await redisClient.set(key, value);
-    const numberIncrBy = await redisClient.incrBy(key, 1);
+    const numberIncrBy = await redisClient.incrBy(key, 2);
 
     const retrievedValue = await redisClient.get(key);
+    const ttl = await redisClient.ttl(key);
+    expect(ttl).to.not.equal(-1);
     expect(numberIncrBy).toEqual(2);
     expect(retrievedValue).toEqual(2);
   });
